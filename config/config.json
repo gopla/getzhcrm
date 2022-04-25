@@ -1,0 +1,26 @@
+{
+	"development": {
+		"username": "zhcrm",
+		"password": "zhcrm",
+		"database": "zhcrm",
+		"host": "127.0.0.1",
+		"dialect": "postgres",
+		"logging": false
+	},
+	"test": {
+		"username": "zhcrm",
+		"password": "zhcrm",
+		"database": "zhcrm",
+		"host": "127.0.0.1",
+		"dialect": "postgres",
+		"logging": false
+	},
+	"production": {
+		"username": "zhcrm",
+		"password": "zhcrm",
+		"database": "zhcrm",
+		"host": "127.0.0.1",
+		"dialect": "postgres",
+		"logging": false
+	}
+}
