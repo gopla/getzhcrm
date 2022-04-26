@@ -4,6 +4,7 @@ const Deals = require('./models').Deals
 const cron = require('node-cron')
 
 const config = require('./config/zoho.config')
+const { sequelize } = require('./models')
 
 // Get data from Zoho CRM by Module name and Page number
 let getDataFromCRM = async (pageNum, moduleName) => {
@@ -23,6 +24,12 @@ let getDataFromCRM = async (pageNum, moduleName) => {
 let insertIntoTableDeals = async (dealsData) => {
 	let response = await Deals.bulkCreate(dealsData, { loggging: false })
 	return response
+}
+
+// Call Stored Procedure in database
+let deleteOneYearSP = async () => {
+	let data = await sequelize.query('CALL delete_one_year_data()')
+	return data
 }
 
 // Main function scheduled
@@ -63,8 +70,11 @@ cron.schedule('5 17 * * *', async () => {
 		pageNum++
 	} while (dealsData.info.more_records)
 
-	// // Bulk insert into Deals table by Array from before
+	// Bulk insert into Deals table by Array from before
 	await insertIntoTableDeals(arrDeals)
+
+	// Delete up to 1 year data
+	await deleteOneYearSP()
 
 	// Print how many data has been fetched into database
 	console.log(`${arrDeals.length} Deals Data Fetched`)

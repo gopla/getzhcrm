@@ -1,0 +1,11 @@
+// delete_one_year_data()
+
+CREATE OR REPLACE PROCEDURE public.delete_one_year_data()
+	LANGUAGE plpgsql
+AS $procedure$
+	BEGIN
+		delete from "Deals" 
+		where "createdAt" between (current_timestamp - interval '2 year') and (current_timestamp - interval '1 year');
+	END;
+$procedure$
+;
