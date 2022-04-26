@@ -1,7 +1,7 @@
 require('dotenv').config()
 const zoho = require('@trifoia/zcrmsdk')
-const fs = require('fs')
 const Deals = require('./models').Deals
+const cron = require('node-cron')
 
 const config = require('./config/zoho.config')
 
@@ -25,8 +25,9 @@ let insertIntoTableDeals = async (dealsData) => {
 	return response
 }
 
-// Main function
-;(async () => {
+// Main function scheduled
+// It'll run every day at 17:05
+cron.schedule('5 17 * * *', async () => {
 	// Setup variables
 	let pageNum = 1,
 		dealsData = '',
@@ -62,18 +63,9 @@ let insertIntoTableDeals = async (dealsData) => {
 		pageNum++
 	} while (dealsData.info.more_records)
 
-	// Bulk insert into Deals table by Array from before
+	// // Bulk insert into Deals table by Array from before
 	await insertIntoTableDeals(arrDeals)
-
-	// Create json file contains the data fetched from API
-	// This process can be skipped
-	fs.createWriteStream('./dealsData.json').write(
-		JSON.stringify(arrDeals),
-		(err) => {
-			if (err) console.log('error : ', err)
-		},
-	)
 
 	// Print how many data has been fetched into database
 	console.log(`${arrDeals.length} Deals Data Fetched`)
-})()
+})
