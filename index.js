@@ -33,8 +33,8 @@ let deleteOneYearSP = async () => {
 }
 
 // Main function scheduled
-// It'll run every day at 17:05
-cron.schedule('5 17 * * *', async () => {
+// It'll run every day at 17:00
+cron.schedule('0 17 * * *', async () => {
 	// Setup variables
 	let pageNum = 1,
 		dealsData = '',
