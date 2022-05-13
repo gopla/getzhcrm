@@ -37,7 +37,7 @@ let deleteOneYearSP = async () => {
 // Create server
 http
 	.createServer(async (req, res) => {
-		cron.schedule('30 09 * * *', async () => {
+		cron.schedule('57 09 * * *', async () => {
 			console.log(` -> Application Running`)
 			// Setup variables
 			let pageNum = 1,
