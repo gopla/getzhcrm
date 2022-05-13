@@ -6,7 +6,7 @@ const http = require('http')
 
 const config = require('./config/zoho.config')
 const { sequelize } = require('./models')
-const port = 3003
+const port = 3434
 
 // Get data from Zoho CRM by Module name and Page number
 let getDataFromCRM = async (pageNum, moduleName) => {
