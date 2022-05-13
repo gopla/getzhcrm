@@ -89,4 +89,5 @@ http
 	})
 	.listen(port, () => {
 		console.log(` -> Hello World! Running on port ${port}`)
+		console.log(` -> Time now : ${new Date()}`)
 	})
