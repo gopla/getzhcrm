@@ -37,59 +37,57 @@ let deleteOneYearSP = async () => {
 // Create server
 http
 	.createServer(async (req, res) => {
-		// cron.schedule('57 09 * * *', async () => {
-
-		// })
-
 		if (req.url != '/favicon.ico') {
-			res.write('Application running')
-			res.write(` -> Time now : ${new Date()}`)
-			res.end()
+			cron.schedule('55 09 * * *', async () => {
+				res.write('Application running')
+				res.write(` -> Time now : ${new Date()}`)
+				res.end()
 
-			console.log(` -> Application Running`)
-			// Setup variables
-			let pageNum = 1,
-				dealsData = '',
-				arrDeals = []
+				console.log(` -> Application Running`)
+				// Setup variables
+				let pageNum = 1,
+					dealsData = '',
+					arrDeals = []
 
-			// Loop getDataFromCRM function as long as response has more_record
-			do {
-				dealsData = await getDataFromCRM(pageNum, 'Deals')
-				console.log(`Getting data at page ${pageNum}`)
-				dealsData.data
-					? console.log('Ada Data')
-					: console.log(`No Data? ${dealsData.data}`)
+				// Loop getDataFromCRM function as long as response has more_record
+				do {
+					dealsData = await getDataFromCRM(pageNum, 'Deals')
+					console.log(`Getting data at page ${pageNum}`)
+					dealsData.data
+						? console.log('Ada Data')
+						: console.log(`No Data? ${dealsData.data}`)
 
-				// Mapping response data to clean it and push it into array
-				dealsData.data.map((isiArray) => {
-					;(isiArray['Owner'] = isiArray['Owner'].name),
-						(isiArray['Product_2'] = isiArray.Product_2[0]),
-						(isiArray['Created_By'] = isiArray['Created_By'].name),
-						(isiArray['Modified_By'] = isiArray['Modified_By'].name),
-						(isiArray['Account_Name'] = isiArray['Account_Name'].name),
-						(isiArray['Contact_Name'] =
-							isiArray['Contact_Name'] == null
-								? null
-								: isiArray['Contact_Name'].name),
-						(isiArray['Tag'] =
-							isiArray.Tag[0] == null ? null : isiArray.Tag[0].name)
+					// Mapping response data to clean it and push it into array
+					dealsData.data.map((isiArray) => {
+						;(isiArray['Owner'] = isiArray['Owner'].name),
+							(isiArray['Product_2'] = isiArray.Product_2[0]),
+							(isiArray['Created_By'] = isiArray['Created_By'].name),
+							(isiArray['Modified_By'] = isiArray['Modified_By'].name),
+							(isiArray['Account_Name'] = isiArray['Account_Name'].name),
+							(isiArray['Contact_Name'] =
+								isiArray['Contact_Name'] == null
+									? null
+									: isiArray['Contact_Name'].name),
+							(isiArray['Tag'] =
+								isiArray.Tag[0] == null ? null : isiArray.Tag[0].name)
 
-					delete isiArray['$approval']
-					delete isiArray['$review_process']
+						delete isiArray['$approval']
+						delete isiArray['$review_process']
 
-					arrDeals.push(isiArray)
-				})
-				pageNum++
-			} while (dealsData.info.more_records)
+						arrDeals.push(isiArray)
+					})
+					pageNum++
+				} while (dealsData.info.more_records)
 
-			// Bulk insert into Deals table by Array from before
-			await insertIntoTableDeals(arrDeals)
+				// Bulk insert into Deals table by Array from before
+				await insertIntoTableDeals(arrDeals)
 
-			// Delete up to 1 year data
-			await deleteOneYearSP()
+				// Delete up to 1 year data
+				await deleteOneYearSP()
 
-			// Print how many data has been fetched into database
-			console.log(`${arrDeals.length} Deals Data Fetched`)
+				// Print how many data has been fetched into database
+				console.log(`${arrDeals.length} Deals Data Fetched`)
+			})
 		}
 	})
 	.listen(port, () => {
