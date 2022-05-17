@@ -37,13 +37,13 @@ let deleteOneYearSP = async () => {
 // Create server
 http
 	.createServer(async (req, res) => {
+		res.write('Application running')
+		res.write(` -> Time now : ${new Date()}`)
+		res.end()
+
 		if (req.url != '/favicon.ico') {
 			cron.schedule('55 09 * * *', async () => {
-				res.write('Application running')
-				res.write(` -> Time now : ${new Date()}`)
-				res.end()
-
-				console.log(` -> Application Running`)
+				console.log(` -> Cron Running`)
 				// Setup variables
 				let pageNum = 1,
 					dealsData = '',
